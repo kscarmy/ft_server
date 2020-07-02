@@ -1,24 +1,25 @@
 # Image source :
 FROM debian:buster
 
-# Installations des ressources en lignes :
+# Installations des ressources en lignes et mise à jour :
 RUN apt-get -y update \
 && apt-get -y install vim \
 && apt-get -y install wget \
 && apt-get -y install nginx \
 && apt-get -y install mariadb-server \
-&& apt-get -y install procps \
 && apt-get -y install php7.3-fpm php7.3-common php7.3-mysql php7.3-gmp php7.3-curl php7.3-intl php7.3-mbstring php7.3-xmlrpc php7.3-gd php7.3-xml php7.3-cli php7.3-zip php7.3-soap php7.3-imap
 
-# Installation des ressources locales :
+# Copie des ressources locales :
 COPY ./srcs/nginx-conf ./tmp/nginx-conf
 COPY ./srcs/phpmyadmin.inc.php ./tmp/phpmyadmin.inc.php
 COPY ./srcs/wp-config.php ./tmp/wp-config.php
 
-# Fichiers :
+# Creations de fichiers :
 RUN service mysql start \
-&& chown -R www-data /var/www/* && chmod -R 755 /var/www/* \
-&& mkdir /var/www/guderram && touch /var/www/guderram/index.php \
+&& chown -R www-data /var/www/* \
+&& chmod -R 755 /var/www/* \
+&& mkdir /var/www/guderram \
+&& touch /var/www/guderram/index.php \
 && echo "<?php phpinfo(); ?>" >> /var/www/guderram/index.php
 
 # Generation SSL :
